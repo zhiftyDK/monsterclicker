@@ -1,0 +1,35 @@
+body {
+    overflow: hidden;
+}
+
+#monster {
+    cursor: pointer;
+}
+
+.btn-main {
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(170,207,53,1) 6%, rgba(0,174,76,1) 100%);
+}
+
+.btn-main:hover {
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgb(198, 237, 68) 6%, rgb(1, 207, 90) 100%);
+}
+
+.monster-background {
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(170,207,53,1) 6%, rgba(0,174,76,1) 100%);
+    width: 100%;
+}
+
+.monsterclick {
+    transform: scale(100%);
+    animation-name: monsterhover;
+    animation-duration: 0.1s;
+}
+
+@keyframes monsterhover {
+    0% {transform: scale(100%);}
+    50% {transform: scale(110%);}
+    100% {transform: scale(100%);}
+}
