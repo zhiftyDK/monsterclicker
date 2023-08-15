@@ -87,10 +87,14 @@ addUpgrade("Trampertøser", "En trampertøs drikker hurtigt, men tramper nogenga
 let unlockedUpgrades = [];
 let upgrades = [
     ["HTX'ere", "En htx'er drikker mange monstere, automatisk 3 pant hvert sekund!", "htxer", 72, "nerd.png", 3],
-    ["Gex fans", "Gex fans drikker uvirkelige mængder af monster, automatisk 5 pant hvert sekund, buch mann!", "gexfan", 120, "gex.jpg", 5]
+    ["Gex fans", "Gex fans drikker uvirkelige mængder af monster, automatisk 5 pant hvert sekund, buch mann!", "gexfan", 120, "gex.jpg", 5],
+    ["Landmænd", "Landmænd skal meget tidligt op om morgenen, automatisk 10 pant hvert sekund!", "landmand", 200, "farmer.png", 10],
+    ["Software studerende", "Disse studerende har det hårdt, software er ikke nemt, automatisk 12 pant hvert sekund!", 250, "programmer.png", 12],
+    ["Karen", "Det kræver helt sikkert en masse energi at være så sur hele tiden, automatisk 15 pant hvert sekund!", 270, "karen.png", 15],
+    ["Mcdonalds medarbejder", "Ingen gider at arbejde på mcdonalds det kræver noget specielt, automatisk 20 pant hvert sekund!", 340, "mcdonalds.png", 20]
 ];
 function unlockUpgrade(i) {
-    if(i != false) {
+    if(i !== false) {
         addUpgrade(upgrades[i][0], upgrades[i][1], upgrades[i][2], upgrades[i][3], upgrades[i][4], upgrades[i][5]);
         unlockedUpgrades.push(upgrades[i]);
         upgrades[i] = false;
@@ -103,25 +107,43 @@ function saveProgress() {
     if(unlockedUpgrades.length > 0) {
         unlockedUpgrades.forEach(upgrade => {
             const upgradeId = upgrade[2];
-            formattedUpgrades.push({"upgrade": upgrade, "count": parseInt(document.getElementById(`${upgradeId}count`).innerText)})
+            formattedUpgrades.push({"upgrade": upgrade, "count": parseInt(document.getElementById(`${upgradeId}count`).innerText), "currentprice": document.getElementById(`${upgradeId}btn`).innerText})
         });
     } else {
         formattedUpgrades = false;
     }
     const save = {
-        "defaultUpgrades": {
-            "clickercount": parseInt(clickercount.innerText),
-            "trampercount": parseInt(document.getElementById("trampercount").innerText)
-        },
+        "defaultUpgrades": [
+            {"clickercount": parseInt(clickercount.innerText), "currentprice": document.getElementById("clickerbtn").innerText},
+            {"trampercount": parseInt(document.getElementById("trampercount").innerText), "currentprice": document.getElementById("tramperbtn").innerText}
+        ],
         "upgrades": formattedUpgrades,
         "pant": parseInt(monsterPoint.innerText)
     };
     localStorage.setItem("monsterClickerSave", JSON.stringify(save));
 }
 
-function loadProgress() {
-    if(localStorage.getItem("monsterClickerSave")) {
-        const save = JSON.parse(localStorage.getItem("monsterClickerSave"));
-        console.log(save);
+setInterval(() => {
+    saveProgress()
+}, 1000);
+
+//Load progress on page load
+if(localStorage.getItem("monsterClickerSave")) {
+    const save = JSON.parse(localStorage.getItem("monsterClickerSave"));
+    monsterPoint.innerHTML = save.pant
+    document.getElementById("tramperbtn").setAttribute("onclick", `buyUpgrade('tramper', ${parseInt(save.defaultUpgrades[1].currentprice.replace(" pant", ""))}, 1);`)
+    document.getElementById("tramperbtn").innerText = save.defaultUpgrades[1].currentprice;
+    document.getElementById("trampercount").innerText = save.defaultUpgrades[1].trampercount;
+    document.getElementById("clickerbtn").innerText = save.defaultUpgrades[0].currentprice;
+    document.getElementById("clickercount").innerText = save.defaultUpgrades[0].clickercount;
+    document.getElementById("cpsStats").innerText = parseInt(document.getElementById("cpsStats").innerText) + parseInt(save.defaultUpgrades[1].trampercount);
+    if(save.upgrades) {
+        save.upgrades.forEach(upgrade => {
+            unlockedUpgrades.push(upgrade.upgrade)
+            addUpgrade(upgrade.upgrade[0], upgrade.upgrade[1], upgrade.upgrade[2], upgrade.upgrade[3], upgrade.upgrade[4], upgrade.upgrade[5])
+            document.getElementById(`${upgrade.upgrade[2]}btn`).innerText = upgrade.currentprice;
+            document.getElementById(`${upgrade.upgrade[2]}count`).innerText = upgrade.count;
+            document.getElementById(`${upgrade.upgrade[2]}btn`).setAttribute("onclick", `buyUpgrade('${upgrade.upgrade[2]}', ${parseInt(upgrade.currentprice.replace(" pant", ""))}, ${upgrade.upgrade[5]});`)
+        });
     }
 }
