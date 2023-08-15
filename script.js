@@ -89,9 +89,10 @@ let upgrades = [
     ["HTX'ere", "En htx'er drikker mange monstere, automatisk 3 pant hvert sekund!", "htxer", 72, "nerd.png", 3],
     ["Gex fans", "Gex fans drikker uvirkelige mængder af monster, automatisk 5 pant hvert sekund, buch mann!", "gexfan", 120, "gex.jpg", 5],
     ["Landmænd", "Landmænd skal meget tidligt op om morgenen, automatisk 10 pant hvert sekund!", "landmand", 200, "farmer.png", 10],
-    ["Software studerende", "Disse studerende har det hårdt, software er ikke nemt, automatisk 12 pant hvert sekund!", 250, "programmer.png", 12],
-    ["Karen", "Det kræver helt sikkert en masse energi at være så sur hele tiden, automatisk 15 pant hvert sekund!", 270, "karen.png", 15],
-    ["Mcdonalds medarbejder", "Ingen gider at arbejde på mcdonalds det kræver noget specielt, automatisk 20 pant hvert sekund!", 340, "mcdonalds.png", 20]
+    ["Software studerende", "Disse studerende har det hårdt, software er ikke nemt, automatisk 12 pant hvert sekund!", "software", 250, "programmer.png", 12],
+    ["Karen", "Det kræver helt sikkert en masse energi at være så sur hele tiden, automatisk 15 pant hvert sekund!", "karen", 270, "karen.png", 15],
+    ["Mcdonalds medarbejder", "Ingen gider at arbejde på mcdonalds det kræver noget specielt, automatisk 20 pant hvert sekund!", "mcdonalds", 340, "mcdonalds.png", 20],
+    ["Waifu", "Det ultimative anime wife material, denne waifu bruger mega meget energi på små gamer drenge, 28 pant hvert sekund!", "waifu", 400, "cosplayer.png", 28]
 ];
 function unlockUpgrade(i) {
     if(i !== false) {
@@ -122,28 +123,35 @@ function saveProgress() {
     };
     localStorage.setItem("monsterClickerSave", JSON.stringify(save));
 }
-
-setInterval(() => {
+const saveInterval = setInterval(() => {
     saveProgress()
 }, 1000);
+
+//Reset progress
+function resetProgress() {
+    localStorage.removeItem("monsterClickerSave");
+    window.location.reload();
+    clearInterval(saveInterval);
+}
 
 //Load progress on page load
 if(localStorage.getItem("monsterClickerSave")) {
     const save = JSON.parse(localStorage.getItem("monsterClickerSave"));
     monsterPoint.innerHTML = save.pant
-    document.getElementById("tramperbtn").setAttribute("onclick", `buyUpgrade('tramper', ${parseInt(save.defaultUpgrades[1].currentprice.replace(" pant", ""))}, 1);`)
     document.getElementById("tramperbtn").innerText = save.defaultUpgrades[1].currentprice;
     document.getElementById("trampercount").innerText = save.defaultUpgrades[1].trampercount;
     document.getElementById("clickerbtn").innerText = save.defaultUpgrades[0].currentprice;
-    document.getElementById("clickercount").innerText = save.defaultUpgrades[0].clickercount;
+    clickerPris = parseInt(save.defaultUpgrades[0].currentprice);
+    clickercount.innerText = save.defaultUpgrades[0].clickercount;
     document.getElementById("cpsStats").innerText = parseInt(document.getElementById("cpsStats").innerText) + parseInt(save.defaultUpgrades[1].trampercount);
+    document.getElementById("cpcStats").innerText = parseInt(document.getElementById("cpcStats").innerText) + parseInt(save.defaultUpgrades[0].clickercount);
     if(save.upgrades) {
         save.upgrades.forEach(upgrade => {
             unlockedUpgrades.push(upgrade.upgrade)
             addUpgrade(upgrade.upgrade[0], upgrade.upgrade[1], upgrade.upgrade[2], upgrade.upgrade[3], upgrade.upgrade[4], upgrade.upgrade[5])
+            document.getElementById("cpsStats").innerText = parseInt(document.getElementById("cpsStats").innerText) + parseInt(upgrade.count) * upgrade.upgrade[5]; 
             document.getElementById(`${upgrade.upgrade[2]}btn`).innerText = upgrade.currentprice;
             document.getElementById(`${upgrade.upgrade[2]}count`).innerText = upgrade.count;
-            document.getElementById(`${upgrade.upgrade[2]}btn`).setAttribute("onclick", `buyUpgrade('${upgrade.upgrade[2]}', ${parseInt(upgrade.currentprice.replace(" pant", ""))}, ${upgrade.upgrade[5]});`)
         });
     }
 }

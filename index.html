@@ -14,12 +14,32 @@
     <h3 class="position-absolute m-4">Pant: <span id="monsterPoint">0</span></h3>
     <h5 class="position-absolute m-4" style="margin-top: 4rem !important;">Pant pr. klik: <span id="cpcStats">1</span></h5>
     <h5 class="position-absolute m-4" style="margin-top: 6rem !important;">Pant pr. sekund: <span id="cpsStats">0</span></h5>
+    <a class="position-absolute" style="bottom: 2rem; left: 2rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#resetModal"><img src="./images/reset.png" alt="" width="50rem"></a>
+
+    <!-- Modal -->
+    <div class="modal fade" id="resetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="resetModalLabel">Nulstil</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Hvis du trykker nulstil, bliver hele spillet nulstillet og du mister alt dit fremskridt!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Luk</button>
+                <button type="button" class="btn btn-main" onclick="resetProgress()">Nulstil</button>
+            </div>
+        </div>
+        </div>
+    </div>
 
     <div class="row justify-content-center align-items-center g-2" style="height: 100vh;">
         <div class="col-8 d-flex justify-content-center align-items-center monster-background" style="height: 100%;">
             <img id="monster" src="./images/monster.png" width="20%">
         </div>
-        <div class="col-4" style="height: 100%; overflow: auto;" id="upgrades">
+        <div class="col-4 pt-2 pb-4" style="height: 100%; overflow-y: scroll;" id="upgrades">
             <div class="row justify-content-center align-items-center g-2 p-4 pb-0">
                 <div class="col-2">
                     <img src="./images/tap.png" alt="" width="80%">
