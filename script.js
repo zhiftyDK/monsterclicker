@@ -90,9 +90,11 @@ let upgrades = [
     ["Gex fans", "Gex fans drikker uvirkelige mængder af monster, automatisk 5 pant hvert sekund, buch mann!", "gexfan", 120, "gex.jpg", 5]
 ];
 function unlockUpgrade(i) {
-    addUpgrade(upgrades[i][0], upgrades[i][1], upgrades[i][2], upgrades[i][3], upgrades[i][4], upgrades[i][5]);
-    unlockedUpgrades.push(upgrades[i]);
-    upgrades[i] = false;
+    if(i != false) {
+        addUpgrade(upgrades[i][0], upgrades[i][1], upgrades[i][2], upgrades[i][3], upgrades[i][4], upgrades[i][5]);
+        unlockedUpgrades.push(upgrades[i]);
+        upgrades[i] = false;
+    }
 }
 
 //Save progress
@@ -118,6 +120,8 @@ function saveProgress() {
 }
 
 function loadProgress() {
-    const save = JSON.parse(localStorage.getItem("monsterClickerSave"));
-    console.log(save);
+    if(localStorage.getItem("monsterClickerSave")) {
+        const save = JSON.parse(localStorage.getItem("monsterClickerSave"));
+        console.log(save);
+    }
 }
